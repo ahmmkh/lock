@@ -1,5 +1,3 @@
-#include <RFID.h>
-
 /*
 * Read a card using a mfrc522 reader on your SPI interface
 * Pin layout should be as follows (on Arduino Uno):
@@ -18,7 +16,10 @@
 
 RFID rfid(SS_PIN, RST_PIN);
 
-int led = 7;
+int led1 = 7;
+int led2= 6;
+int led3 = 5;
+int buz = 4;
 int power = 8;
 int serNum[5];
 int cards[50][5];
@@ -35,17 +36,22 @@ void setup()
     SPI.begin();
     rfid.init();
 
-    pinMode(led, OUTPUT);
+    pinMode(led1, OUTPUT);
+    pinMode(led2, OUTPUT);
+    pinMode(led3, OUTPUT);
+    pinMode(buz, OUTPUT);
 
     digitalWrite(led, LOW);
 }
 
 void loop()
 {
-
+    digitalWrite(led1,HIGH);
     if (rfid.isCard())
     {
-
+        digitalWrite(buz,HIGH);
+        delay(500);
+        digitalWrite(buz,LOW);
         if (rfid.readCardSerial())
         {
             Serial.print(rfid.serNum[0]);
@@ -76,6 +82,7 @@ void loop()
         if (access1 == true)
         {
             master_access = !master_access;
+
         }
         else
         {
@@ -106,9 +113,9 @@ void loop()
                 if (access2 == true)
                 {
                     Serial.println("Welcome!");
-                    digitalWrite(led, HIGH);
+                    digitalWrite(led2, HIGH);
                     delay(1000);
-                    digitalWrite(led, LOW);
+                    digitalWrite(led2, LOW);
                     digitalWrite(power, HIGH);
                     delay(1000);
                     digitalWrite(power, LOW);
@@ -116,13 +123,13 @@ void loop()
                 else
                 {
                     Serial.println("Not allowed!");
-                    digitalWrite(led, HIGH);
+                    digitalWrite(led3, HIGH);
                     delay(500);
-                    digitalWrite(led, LOW);
+                    digitalWrite(led3, LOW);
                     delay(500);
-                    digitalWrite(led, HIGH);
+                    digitalWrite(led3, HIGH);
                     delay(500);
-                    digitalWrite(led, LOW);
+                    digitalWrite(led3, LOW);
                 }
             }
         }
